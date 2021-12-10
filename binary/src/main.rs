@@ -8,9 +8,14 @@ fn main() {
         .add_state(MyStates::Test)
         .add_system_set(
             SystemSet::on_update(MyStates::Test)
-                .with_system(first.before(TestLabel::First))
-                .with_system(second.after(TestLabel::First).before(TestLabel::Second))
-                .with_system(third.after(TestLabel::Second)),
+                .with_system(first.exclusive_system().before(TestLabel::First))
+                .with_system(
+                    second
+                        .exclusive_system()
+                        .after(TestLabel::First)
+                        .before(TestLabel::Second),
+                )
+                .with_system(third.exclusive_system().after(TestLabel::Second)),
         )
         .run();
 }
